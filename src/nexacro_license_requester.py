@@ -8,10 +8,15 @@ Trace:
 
 import logging
 import sys
+from pathlib import Path
 
 from src.config import Config
 from src.exceptions import AuthenticationError, LicenseRequestError, NetworkError
 from src.session_manager import SessionManager
+
+# Logging configuration constants
+LOG_DIR = Path("logs")
+LOG_FILE_NAME = "nexacro_license_request.log"
 
 
 class NexacroLicenseRequester:
@@ -34,17 +39,14 @@ class NexacroLicenseRequester:
         Returns:
             logging.Logger: Configured logger instance
         """
-        from pathlib import Path
-
         logger = logging.getLogger("NexacroLicenseRequester")
         logger.setLevel(logging.INFO)
 
         # Create logs directory if it doesn't exist
-        log_dir = Path("logs")
-        log_dir.mkdir(exist_ok=True)
+        LOG_DIR.mkdir(exist_ok=True)
 
         # File handler
-        log_file = log_dir / "nexacro_license_request.log"
+        log_file = LOG_DIR / LOG_FILE_NAME
         file_handler = logging.FileHandler(log_file, mode="a", encoding="utf-8")
         file_handler.setLevel(logging.INFO)
         file_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")

@@ -7,6 +7,7 @@ Trace:
   test_refs: TEST-license-request-006
 """
 
+import logging
 from unittest.mock import Mock, patch
 
 import pytest
@@ -99,21 +100,15 @@ class TestLogging:
 
     def test_logger_has_console_handler(self, license_requester):
         """Test that logger has console handler configured."""
-        import logging
-
-        console_handlers = [
-            h for h in license_requester.logger.handlers if isinstance(h, logging.StreamHandler)
-        ]
-        assert len(console_handlers) > 0, "Logger should have at least one console handler"
+        assert any(
+            isinstance(h, logging.StreamHandler) for h in license_requester.logger.handlers
+        ), "Logger should have at least one console handler"
 
     def test_logger_has_file_handler(self, license_requester):
         """Test that logger has file handler configured (P2 bug fix)."""
-        import logging
-
-        file_handlers = [
-            h for h in license_requester.logger.handlers if isinstance(h, logging.FileHandler)
-        ]
-        assert len(file_handlers) > 0, "Logger should have file handler as documented"
+        assert any(isinstance(h, logging.FileHandler) for h in license_requester.logger.handlers), (
+            "Logger should have file handler as documented"
+        )
 
     def test_log_request_summary_success(self, license_requester):
         """Test logging of successful request summary."""
