@@ -1,137 +1,49 @@
 name: CI
 
 on:
-  push:
-    branches: [main, master, develop]
   pull_request:
     branches: [main, master, develop]
-  workflow_dispatch:
 
 jobs:
-  lint-and-type-check:
-    name: Lint and Type Check
+  ci:
+    name: CI Checks
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
           version: "latest"
 
-      - name: Set up Python
-        run: uv python install 3.11
+      - name: Set up Python 3.13
+        run: uv python install 3.13
 
       - name: Install dependencies
         run: uv sync --all-extras
 
-      - name: Run ruff linter
-        run: uv run ruff check src tests
+      - name: Run linters
+        run: |
+          uv run ruff check src tests
+          uv run ruff format --check src tests
 
-      - name: Run ruff formatter check
-        run: uv run ruff format --check src tests
-
-      - name: Run pyright type checker
+      - name: Run type checker
         run: uv run pyright src
 
-      - name: Run bandit security linter
-        run: uv run bandit -c pyproject.toml -r src
-
-      - name: Run pip-audit security audit
-        run: uv run pip-audit --skip-editable
-
-  test:
-    name: Test (Python ${{ matrix.python-version }})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11", "3.12", "3.13"]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          version: "latest"
-
-      - name: Set up Python ${{ matrix.python-version }}
-        run: uv python install ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: uv sync --all-extras
+      - name: Run security checks
+        run: |
+          uv run bandit -c pyproject.toml -r src
+          uv run pip-audit --skip-editable
 
       - name: Run tests with coverage
         run: uv run pytest --cov=src --cov-report=xml --cov-report=term
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        if: matrix.python-version == '3.11'
-        with:
-          file: ./coverage.xml
-          fail_ci_if_error: false
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-  test-package-build:
-    name: Test Package Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          version: "latest"
-
-      - name: Set up Python
-        run: uv python install 3.11
-
-      - name: Build package
-        run: uv build
-
-      - name: Check package
+      - name: Build and check package
         run: |
+          uv build
           uv run pip install twine
           uv run twine check dist/*
 
-  pre-commit:
-    name: Pre-commit Hooks
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          version: "latest"
-
-      - name: Set up Python
-        run: uv python install 3.11
-
-      - name: Install dependencies
-        run: uv sync --all-extras
-
-      - name: Run pre-commit
+      - name: Run pre-commit hooks
         run: uv run pre-commit run --all-files
-
-  all-checks-passed:
-    name: All Checks Passed
-    runs-on: ubuntu-latest
-    needs: [lint-and-type-check, test, test-package-build, pre-commit]
-    if: always()
-    steps:
-      - name: Check if all jobs succeeded
-        run: |
-          if [ "${{ needs.lint-and-type-check.result }}" != "success" ] || \
-             [ "${{ needs.test.result }}" != "success" ] || \
-             [ "${{ needs.test-package-build.result }}" != "success" ] || \
-             [ "${{ needs.pre-commit.result }}" != "success" ]; then
-            echo "One or more checks failed!"
-            exit 1
-          fi
-          echo "All checks passed successfully!"

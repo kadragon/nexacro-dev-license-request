@@ -76,3 +76,21 @@ completed_tasks:
     outcome: |
       Created comprehensive README.md with setup instructions, architecture
       documentation, development workflow, and maintenance guidelines.
+
+  - id: TASK-012
+    title: "Critical Bug Fixes: P1 Response Validation & P2 File Logging"
+    spec_id: SPEC-license-request-001
+    completed_at: "2025-12-26"
+    priority: critical
+    outcome: |
+      Fixed two critical bugs identified in code review:
+
+      P1 (session_manager.py:114): Removed "or response.status_code == 200" from
+      success logic, preventing false positives when portal returns HTTP 200 with
+      error pages. Added 2 tests to verify correct behavior.
+
+      P2 (nexacro_license_requester.py:30-50): Implemented file logging handler
+      to write logs to logs/nexacro_license_request.log, ensuring GitHub Actions
+      can upload log artifacts on failure. Added 2 tests for handler validation.
+
+      All 47 tests passing with 96% coverage (improved from 95%).

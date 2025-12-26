@@ -111,7 +111,7 @@ class SessionManager:
             # Check if request was successful
             if "FAIL" in response.text.upper():
                 raise LicenseRequestError("License request failed")
-            elif "SUCCESS" in response.text.upper() or response.status_code == 200:
+            elif "SUCCESS" in response.text.upper():
                 return True
             else:
                 raise LicenseRequestError("License request failed: Unknown response")
