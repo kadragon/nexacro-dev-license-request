@@ -147,8 +147,8 @@ Automated GitHub Actions workflow to request Nexacro development licenses bimont
 
 ### 5. GitHub Actions with uv
 - **Setup**: Requires both `setup-uv` and `uv python install`
-- **Optimization**: `uv sync` is faster than `pip install -r requirements.txt`
-- **Best Practice**: Use `uv.lock` for consistent environments
+- **Optimization**: `uv sync` directly uses `pyproject.toml` and `uv.lock`
+- **Best Practice**: No need for requirements.txt files with uv
 
 ### 6. Error Handling Hierarchy
 - **Pattern**: Custom exception hierarchy enables precise error handling
