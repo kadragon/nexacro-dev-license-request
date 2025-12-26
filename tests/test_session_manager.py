@@ -193,6 +193,31 @@ class TestLicenseRequest:
             with pytest.raises(LicenseRequestError):
                 session_manager.request_license_email()
 
+    def test_request_license_email_http_200_without_success(self, session_manager):
+        """Test that HTTP 200 without SUCCESS text should fail (P1 bug fix)."""
+        with patch.object(session_manager.session, "get") as mock_get:
+            # Simulate HTTP 200 with error page content (no SUCCESS or FAIL)
+            mock_response = Mock()
+            mock_response.status_code = 200
+            mock_response.text = (
+                "<html><body><h1>Error Page</h1><p>Something went wrong</p></body></html>"
+            )
+            mock_get.return_value = mock_response
+
+            with pytest.raises(LicenseRequestError, match="Unknown response"):
+                session_manager.request_license_email()
+
+    def test_request_license_email_http_200_with_empty_response(self, session_manager):
+        """Test that HTTP 200 with empty response should fail (P1 bug fix)."""
+        with patch.object(session_manager.session, "get") as mock_get:
+            mock_response = Mock()
+            mock_response.status_code = 200
+            mock_response.text = ""
+            mock_get.return_value = mock_response
+
+            with pytest.raises(LicenseRequestError, match="Unknown response"):
+                session_manager.request_license_email()
+
     def test_request_license_email_network_error(self, session_manager):
         """Test handling of network errors during license request."""
         with patch.object(session_manager.session, "get") as mock_get:

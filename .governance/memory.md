@@ -91,6 +91,22 @@ Automated GitHub Actions workflow to request Nexacro development licenses bimont
    - **Resolution**: Check for FAIL explicitly before SUCCESS
    - **Pattern**: Always validate negative cases before positive ones
 
+3. **P1: License Request False Positive on HTTP 200 (TASK-012)**
+   - **Issue**: `session_manager.py:114` used `or response.status_code == 200`, causing any HTTP 200 response to be treated as success even when portal returned error pages
+   - **Impact**: Silent failures where license request failed but workflow reported success
+   - **Resolution**: Removed `or response.status_code == 200` condition, now only checks for explicit "SUCCESS" text
+   - **Tests Added**: `test_request_license_email_http_200_without_success`, `test_request_license_email_http_200_with_empty_response`
+   - **Date**: 2025-12-26
+   - **Coverage Impact**: +2 tests, maintained 96% coverage
+
+4. **P2: File Logging Handler Missing (TASK-012)**
+   - **Issue**: `nexacro_license_requester.py:30-50` documented file+console logging but only implemented console handler
+   - **Impact**: GitHub Actions workflow uploads empty logs/ artifact on failure, making debugging impossible
+   - **Resolution**: Added FileHandler to write logs to `logs/nexacro_license_request.log` with UTF-8 encoding
+   - **Tests Added**: `test_logger_has_console_handler`, `test_logger_has_file_handler`
+   - **Date**: 2025-12-26
+   - **Coverage Impact**: +2 tests, improved coverage from 95% to 96%
+
 ### Current Limitations
 
 1. **Cookie Format Assumption**
@@ -125,9 +141,10 @@ Automated GitHub Actions workflow to request Nexacro development licenses bimont
 ## Lessons Learned
 
 ### 1. TDD Workflow Effectiveness
-- **Observation**: Following strict RED-GREEN-REFACTOR cycle resulted in 94% coverage
+- **Observation**: Following strict RED-GREEN-REFACTOR cycle resulted in 96% coverage
 - **Benefit**: All edge cases caught during test writing phase
 - **Practice**: Write tests first, especially for error scenarios
+- **TASK-012 Example**: P1 and P2 bugs caught by code review, fixed using TDD (test first, then fix)
 
 ### 2. uv Package Manager Advantages
 - **Speed**: Dependency resolution ~10x faster than pip
@@ -200,10 +217,10 @@ Automated GitHub Actions workflow to request Nexacro development licenses bimont
 ## Project Statistics
 
 - **Total Implementation Time**: Single day (2025-12-26)
-- **Total Test Cases**: 43 tests
-- **Test Coverage**: 95% (target: >90%)
-- **Lines of Code**: 157 (src)
-- **Test Code**: ~500 lines
+- **Total Test Cases**: 47 tests (added 4 tests for P1/P2 fixes)
+- **Test Coverage**: 96% (target: >90%)
+- **Lines of Code**: 167 (src, +10 for file logging)
+- **Test Code**: ~550 lines
 - **Specification Files**: 1 (spec.yaml)
 - **Governance Documents**: 4 files
 - **Pre-commit Hooks**: 14 hooks configured
@@ -211,18 +228,19 @@ Automated GitHub Actions workflow to request Nexacro development licenses bimont
 
 ## Success Metrics
 
-✅ All 43 tests passing
-✅ 95% code coverage achieved
+✅ All 47 tests passing (was 43, added 4 for P1/P2)
+✅ 96% code coverage achieved (improved from 95%)
 ✅ SDD×TDD structure fully implemented
 ✅ GitHub Actions workflows configured (License + CI)
 ✅ Comprehensive documentation complete
 ✅ No manual intervention required for execution
 ✅ Error handling for all failure scenarios
-✅ Logging and observability implemented
-✅ Pre-commit hooks configured (ruff, mypy, bandit, yamllint)
+✅ Logging and observability implemented (file + console)
+✅ Pre-commit hooks configured (ruff, pyright, bandit, yamllint)
 ✅ CI pipeline with multi-Python version testing (3.11, 3.12, 3.13)
 ✅ All linting and type checking passing
-✅ Security scanning with bandit
+✅ Security scanning with bandit + pip-audit
+✅ P1 and P2 critical bugs fixed (TASK-012)
 
 ## Maintenance Notes
 

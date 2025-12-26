@@ -97,6 +97,24 @@ class TestLogging:
         assert license_requester.logger is not None
         assert license_requester.logger.name == "NexacroLicenseRequester"
 
+    def test_logger_has_console_handler(self, license_requester):
+        """Test that logger has console handler configured."""
+        import logging
+
+        console_handlers = [
+            h for h in license_requester.logger.handlers if isinstance(h, logging.StreamHandler)
+        ]
+        assert len(console_handlers) > 0, "Logger should have at least one console handler"
+
+    def test_logger_has_file_handler(self, license_requester):
+        """Test that logger has file handler configured (P2 bug fix)."""
+        import logging
+
+        file_handlers = [
+            h for h in license_requester.logger.handlers if isinstance(h, logging.FileHandler)
+        ]
+        assert len(file_handlers) > 0, "Logger should have file handler as documented"
+
     def test_log_request_summary_success(self, license_requester):
         """Test logging of successful request summary."""
         with patch.object(license_requester.logger, "info") as mock_info:
