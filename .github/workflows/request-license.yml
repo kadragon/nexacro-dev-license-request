@@ -1,0 +1,47 @@
+name: Request Nexacro Development License
+
+on:
+  schedule:
+    # 9:05 AM KST = 00:05 UTC (KST is UTC+9)
+    # Runs at 00:05 UTC on the 1st day of Jan, Mar, May, Jul, Sep, Nov
+    - cron: '5 0 1 1,3,5,7,9,11 *'
+
+  workflow_dispatch:  # Allow manual triggering for testing
+
+jobs:
+  request-license:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run license requester
+        env:
+          NEXACRO_USER_ID: ${{ secrets.NEXACRO_USER_ID }}
+          NEXACRO_USER_PASS: ${{ secrets.NEXACRO_USER_PASS }}
+          NEXACRO_CUSTOMER_ID: ${{ secrets.NEXACRO_CUSTOMER_ID }}
+          NEXACRO_EMAIL: ${{ secrets.NEXACRO_EMAIL }}
+        run: |
+          uv run python -m src.nexacro_license_requester
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-request-logs-${{ github.run_number }}
+          path: logs/
+          retention-days: 30
+          if-no-files-found: ignore

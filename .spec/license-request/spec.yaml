@@ -1,0 +1,111 @@
+spec_id: SPEC-license-request-001
+title: "Automated Nexacro Development License Request"
+version: "1.0.0"
+created: "2025-12-26"
+description: |
+  Automates the process of requesting Nexacro development licenses through
+  the TOBESOFT support portal. Executes bimonthly on the 1st day of odd months.
+
+given_when_then:
+  - id: GWT-001
+    given: "It is 9:05 AM KST on the 1st day of an odd month (Jan/Mar/May/Jul/Sep/Nov)"
+    when: "The GitHub Actions workflow executes"
+    then: "The system successfully requests a Nexacro development license"
+
+  - id: GWT-002
+    given: "The TOBESOFT support portal is accessible"
+    when: "Authentication is attempted with valid credentials"
+    then: "A session is established with proper cookies"
+
+  - id: GWT-003
+    given: "A valid authenticated session exists"
+    when: "License request is submitted with customer ID and email"
+    then: "The license request is processed and confirmation is received"
+
+  - id: GWT-004
+    given: "Any step in the workflow fails"
+    when: "An error occurs (network, auth, validation)"
+    then: "The failure is logged and a notification is sent via GitHub Actions"
+
+acceptance_tests:
+  - id: TEST-license-request-001
+    desc: "Session establishment retrieves valid cookies from homepage"
+    trace: GWT-002
+
+  - id: TEST-license-request-002
+    desc: "Login request with valid credentials returns success response"
+    trace: GWT-002
+
+  - id: TEST-license-request-003
+    desc: "License request with valid parameters returns success status"
+    trace: GWT-003
+
+  - id: TEST-license-request-004
+    desc: "Invalid credentials result in proper error handling"
+    trace: GWT-004
+
+  - id: TEST-license-request-005
+    desc: "Network failures are caught and logged appropriately"
+    trace: GWT-004
+
+  - id: TEST-license-request-006
+    desc: "Integration test: Full workflow from session to license request succeeds"
+    trace: GWT-001, GWT-002, GWT-003
+
+http_endpoints:
+  - name: "Homepage Session"
+    method: GET
+    url: "https://support.tobesoft.co.kr/Support/?menu=home"
+    purpose: "Obtain initial session cookies"
+
+  - name: "Login"
+    method: POST
+    url: "https://support.tobesoft.co.kr/Next_JSP/CS-Homepage/Next_JSP/Login/Login_new.jsp"
+    purpose: "Authenticate user and establish session"
+    content_type: "text/xml"
+
+  - name: "License Request"
+    method: GET
+    url: "https://next.tobesoft.com/FrontControllerServlet.do"
+    purpose: "Submit license request"
+
+credentials:
+  - name: NEXACRO_USER_ID
+    description: "User ID for TOBESOFT portal"
+    storage: "GitHub Secrets"
+
+  - name: NEXACRO_USER_PASS
+    description: "Password for TOBESOFT portal"
+    storage: "GitHub Secrets"
+
+  - name: NEXACRO_CUSTOMER_ID
+    description: "Customer ID for license request"
+    storage: "GitHub Secrets"
+
+  - name: NEXACRO_EMAIL
+    description: "Email address for license delivery"
+    storage: "GitHub Secrets"
+
+schedule:
+  cron: "5 0 1 1,3,5,7,9,11 *"
+  timezone: "UTC (00:05 UTC = 09:05 KST)"
+  description: "9:05 AM KST on 1st day of Jan, Mar, May, Jul, Sep, Nov"
+
+dependencies:
+  governance:
+    - "Python coding style for requests-based workflows"
+    - "Error handling patterns for external API calls"
+    - "Session management best practices"
+
+linked_tasks:
+  - TASK-001
+  - TASK-002
+  - TASK-003
+  - TASK-004
+  - TASK-005
+  - TASK-006
+  - TASK-007
+  - TASK-008
+  - TASK-009
+  - TASK-010
+  - TASK-011

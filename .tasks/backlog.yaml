@@ -1,0 +1,129 @@
+# Task Backlog for Nexacro License Requester
+# Trace: spec_id: SPEC-license-request-001
+
+tasks:
+  - id: TASK-004
+    title: "Config Module (TDD)"
+    status: pending
+    priority: critical
+    spec_id: SPEC-license-request-001
+    description: |
+      Implement Config class with environment variable loading and validation.
+      Follow TDD: write tests first, then implementation.
+    acceptance_criteria:
+      - tests/test_config.py created with all test cases
+      - src/config.py implements Config class
+      - All tests pass
+      - Type hints complete
+      - Docstrings present
+
+  - id: TASK-005
+    title: "Session Manager (TDD)"
+    status: pending
+    priority: critical
+    spec_id: SPEC-license-request-001
+    test_refs:
+      - TEST-license-request-001
+      - TEST-license-request-002
+      - TEST-license-request-003
+    description: |
+      Implement SessionManager class handling HTTP session, cookies, and authentication.
+      Follow TDD: RED → GREEN → REFACTOR.
+    acceptance_criteria:
+      - tests/test_session_manager.py with comprehensive test coverage
+      - src/session_manager.py with all methods implemented
+      - Cookie extraction logic tested
+      - Login XML construction tested
+      - License request parameter handling tested
+      - All tests pass with >90% coverage
+
+  - id: TASK-006
+    title: "Main Orchestrator (TDD)"
+    status: pending
+    priority: high
+    spec_id: SPEC-license-request-001
+    test_refs:
+      - TEST-license-request-006
+    description: |
+      Implement NexacroLicenseRequester main orchestration class.
+      Follow TDD approach.
+    acceptance_criteria:
+      - tests/test_license_requester.py created
+      - src/nexacro_license_requester.py implements main logic
+      - Logging configured properly
+      - Error handling comprehensive
+      - CLI entry point functional
+      - All tests pass
+
+  - id: TASK-007
+    title: "Error Handling & Integration Tests (TDD)"
+    status: pending
+    priority: high
+    spec_id: SPEC-license-request-001
+    test_refs:
+      - TEST-license-request-004
+      - TEST-license-request-005
+      - TEST-license-request-006
+    description: |
+      Implement comprehensive error handling and integration tests.
+    acceptance_criteria:
+      - tests/test_integration.py with full workflow tests
+      - Custom exception classes defined
+      - Retry logic implemented and tested
+      - All error scenarios covered
+      - Integration test passes
+
+  - id: TASK-008
+    title: "GitHub Actions Workflow Setup"
+    status: pending
+    priority: high
+    spec_id: SPEC-license-request-001
+    description: |
+      Create GitHub Actions workflow with scheduled trigger and secret management.
+    acceptance_criteria:
+      - .github/workflows/request-license.yml created
+      - Cron schedule correctly configured (5 0 1 1,3,5,7,9,11 *)
+      - All secrets properly referenced
+      - Manual trigger (workflow_dispatch) enabled
+      - Log upload on failure configured
+
+  - id: TASK-009
+    title: "Documentation & Testing Preparation"
+    status: pending
+    priority: medium
+    spec_id: SPEC-license-request-001
+    description: |
+      Create comprehensive README, configure GitHub Secrets, and prepare for testing.
+    acceptance_criteria:
+      - README.md with setup instructions
+      - GitHub Secrets configuration guide
+      - Local testing instructions with .env file
+      - Manual workflow trigger test plan
+
+  - id: TASK-010
+    title: "Manual Workflow Testing"
+    status: pending
+    priority: high
+    spec_id: SPEC-license-request-001
+    description: |
+      Execute manual workflow trigger to verify end-to-end functionality before
+      enabling scheduled execution.
+    acceptance_criteria:
+      - GitHub Secrets configured
+      - Manual workflow trigger executes successfully
+      - Logs verify all steps (session, login, license request)
+      - License request confirmed received
+      - No errors in workflow execution
+
+  - id: TASK-011
+    title: "Production Deployment"
+    status: pending
+    priority: medium
+    spec_id: SPEC-license-request-001
+    description: |
+      Enable scheduled workflow and update governance documentation.
+    acceptance_criteria:
+      - Scheduled workflow enabled
+      - First scheduled execution monitored
+      - .governance/memory.md updated with lessons learned
+      - .tasks/done.yaml updated with all completed tasks
