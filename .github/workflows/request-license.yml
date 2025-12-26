@@ -15,15 +15,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v7
         with:
           version: "latest"
 
       - name: Set up Python
-        run: uv python install 3.11
+        run: uv python install 3.13
 
       - name: Install dependencies
         run: uv sync
@@ -32,14 +32,13 @@ jobs:
         env:
           NEXACRO_USER_ID: ${{ secrets.NEXACRO_USER_ID }}
           NEXACRO_USER_PASS: ${{ secrets.NEXACRO_USER_PASS }}
-          NEXACRO_CUSTOMER_ID: ${{ secrets.NEXACRO_CUSTOMER_ID }}
           NEXACRO_EMAIL: ${{ secrets.NEXACRO_EMAIL }}
         run: |
           uv run python -m src.nexacro_license_requester
 
       - name: Upload logs on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: license-request-logs-${{ github.run_number }}
           path: logs/

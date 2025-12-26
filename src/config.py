@@ -44,7 +44,6 @@ class Config:
         required_vars = [
             "NEXACRO_USER_ID",
             "NEXACRO_USER_PASS",
-            "NEXACRO_CUSTOMER_ID",
             "NEXACRO_EMAIL",
         ]
 
@@ -52,11 +51,12 @@ class Config:
         if missing:
             raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
 
+        user_id = os.environ["NEXACRO_USER_ID"]
         return cls(
-            user_id=os.getenv("NEXACRO_USER_ID", ""),
-            user_pass=os.getenv("NEXACRO_USER_PASS", ""),
-            customer_id=os.getenv("NEXACRO_CUSTOMER_ID", ""),
-            email=os.getenv("NEXACRO_EMAIL", ""),
+            user_id=user_id,
+            user_pass=os.environ["NEXACRO_USER_PASS"],
+            customer_id=user_id,
+            email=os.environ["NEXACRO_EMAIL"],
         )
 
     def validate(self) -> None:

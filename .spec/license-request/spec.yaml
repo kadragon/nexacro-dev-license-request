@@ -78,10 +78,6 @@ credentials:
     description: "Password for TOBESOFT portal"
     storage: "GitHub Secrets"
 
-  - name: NEXACRO_CUSTOMER_ID
-    description: "Customer ID for license request"
-    storage: "GitHub Secrets"
-
   - name: NEXACRO_EMAIL
     description: "Email address for license delivery"
     storage: "GitHub Secrets"

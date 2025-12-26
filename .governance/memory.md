@@ -18,9 +18,8 @@ Automated GitHub Actions workflow to request Nexacro development licenses bimont
 ### 2. Credential Management
 - **Decision**: Store all credentials in GitHub Secrets, load via environment variables
 - **Credentials**:
-  - `NEXACRO_USER_ID`: knuehaksa
+  - `NEXACRO_USER_ID`: knuehaksa (also used as customer ID)
   - `NEXACRO_USER_PASS`: rydnjs!@#
-  - `NEXACRO_CUSTOMER_ID`: knuehaksa
   - `NEXACRO_EMAIL`: kadragon@knue.ac.kr
 - **Security**: Never log credentials, use structured logging with redaction
 
@@ -67,7 +66,7 @@ Automated GitHub Actions workflow to request Nexacro development licenses bimont
   - `p_ConType`: TECH2
   - `p_Product`: NP14
   - `p_Language`: KOR
-  - `p_CustomID`: {NEXACRO_CUSTOMER_ID}
+  - `p_CustomID`: {NEXACRO_USER_ID}
   - `p_Email`: {NEXACRO_EMAIL}
   - `p_Merge`: N
   - `zip`: false

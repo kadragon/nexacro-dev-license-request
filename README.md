@@ -52,9 +52,8 @@ nexacro-dev-license-request/
 
 Navigate to repository Settings → Secrets and variables → Actions, and add:
 
-- `NEXACRO_USER_ID`: Your TOBESOFT portal user ID (knuehaksa)
+- `NEXACRO_USER_ID`: Your TOBESOFT portal user ID (also used as customer ID for license request) (knuehaksa)
 - `NEXACRO_USER_PASS`: Your TOBESOFT portal password
-- `NEXACRO_CUSTOMER_ID`: Customer ID for license request (knuehaksa)
 - `NEXACRO_EMAIL`: Email address for license delivery (kadragon@knue.ac.kr)
 
 ### 2. Local Development Setup
@@ -77,7 +76,6 @@ uv run pre-commit install
 cat > .env <<EOF
 NEXACRO_USER_ID=your_user_id
 NEXACRO_USER_PASS=your_password
-NEXACRO_CUSTOMER_ID=your_customer_id
 NEXACRO_EMAIL=your_email@example.com
 EOF
 ```

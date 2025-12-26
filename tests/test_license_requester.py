@@ -136,7 +136,6 @@ class TestMainEntryPoint:
         """Test main() executes successfully with valid environment."""
         monkeypatch.setenv("NEXACRO_USER_ID", "test_user")
         monkeypatch.setenv("NEXACRO_USER_PASS", "test_pass")
-        monkeypatch.setenv("NEXACRO_CUSTOMER_ID", "test_customer")
         monkeypatch.setenv("NEXACRO_EMAIL", "test@example.com")
 
         with patch("src.nexacro_license_requester.NexacroLicenseRequester") as MockRequester:
@@ -153,7 +152,7 @@ class TestMainEntryPoint:
     def test_main_with_missing_env(self, monkeypatch):
         """Test main() handles missing environment variables."""
         # Clear all env vars
-        for var in ["NEXACRO_USER_ID", "NEXACRO_USER_PASS", "NEXACRO_CUSTOMER_ID", "NEXACRO_EMAIL"]:
+        for var in ["NEXACRO_USER_ID", "NEXACRO_USER_PASS", "NEXACRO_EMAIL"]:
             monkeypatch.delenv(var, raising=False)
 
         from src.nexacro_license_requester import main
@@ -166,7 +165,6 @@ class TestMainEntryPoint:
         """Test main() handles request failure."""
         monkeypatch.setenv("NEXACRO_USER_ID", "test_user")
         monkeypatch.setenv("NEXACRO_USER_PASS", "test_pass")
-        monkeypatch.setenv("NEXACRO_CUSTOMER_ID", "test_customer")
         monkeypatch.setenv("NEXACRO_EMAIL", "test@example.com")
 
         with patch("src.nexacro_license_requester.NexacroLicenseRequester") as MockRequester:
