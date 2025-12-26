@@ -44,7 +44,6 @@ class Config:
         required_vars = [
             "NEXACRO_USER_ID",
             "NEXACRO_USER_PASS",
-            "NEXACRO_CUSTOMER_ID",
             "NEXACRO_EMAIL",
         ]
 
@@ -55,7 +54,7 @@ class Config:
         return cls(
             user_id=os.getenv("NEXACRO_USER_ID", ""),
             user_pass=os.getenv("NEXACRO_USER_PASS", ""),
-            customer_id=os.getenv("NEXACRO_CUSTOMER_ID", ""),
+            customer_id=os.getenv("NEXACRO_USER_ID", ""),
             email=os.getenv("NEXACRO_EMAIL", ""),
         )
 

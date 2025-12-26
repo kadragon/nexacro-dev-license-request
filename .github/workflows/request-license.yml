@@ -32,7 +32,6 @@ jobs:
         env:
           NEXACRO_USER_ID: ${{ secrets.NEXACRO_USER_ID }}
           NEXACRO_USER_PASS: ${{ secrets.NEXACRO_USER_PASS }}
-          NEXACRO_CUSTOMER_ID: ${{ secrets.NEXACRO_CUSTOMER_ID }}
           NEXACRO_EMAIL: ${{ secrets.NEXACRO_EMAIL }}
         run: |
           uv run python -m src.nexacro_license_requester

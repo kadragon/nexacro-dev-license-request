@@ -18,20 +18,18 @@ class TestConfigFromEnv:
         """Test successful config creation when all env vars are set."""
         monkeypatch.setenv("NEXACRO_USER_ID", "test_user")
         monkeypatch.setenv("NEXACRO_USER_PASS", "test_pass")
-        monkeypatch.setenv("NEXACRO_CUSTOMER_ID", "test_customer")
         monkeypatch.setenv("NEXACRO_EMAIL", "test@example.com")
 
         config = Config.from_env()
 
         assert config.user_id == "test_user"
         assert config.user_pass == "test_pass"
-        assert config.customer_id == "test_customer"
+        assert config.customer_id == "test_user"
         assert config.email == "test@example.com"
 
     def test_from_env_missing_user_id(self, monkeypatch):
         """Test ValueError when NEXACRO_USER_ID is missing."""
         monkeypatch.setenv("NEXACRO_USER_PASS", "test_pass")
-        monkeypatch.setenv("NEXACRO_CUSTOMER_ID", "test_customer")
         monkeypatch.setenv("NEXACRO_EMAIL", "test@example.com")
 
         with pytest.raises(ValueError, match="NEXACRO_USER_ID"):
@@ -40,26 +38,15 @@ class TestConfigFromEnv:
     def test_from_env_missing_user_pass(self, monkeypatch):
         """Test ValueError when NEXACRO_USER_PASS is missing."""
         monkeypatch.setenv("NEXACRO_USER_ID", "test_user")
-        monkeypatch.setenv("NEXACRO_CUSTOMER_ID", "test_customer")
         monkeypatch.setenv("NEXACRO_EMAIL", "test@example.com")
 
         with pytest.raises(ValueError, match="NEXACRO_USER_PASS"):
-            Config.from_env()
-
-    def test_from_env_missing_customer_id(self, monkeypatch):
-        """Test ValueError when NEXACRO_CUSTOMER_ID is missing."""
-        monkeypatch.setenv("NEXACRO_USER_ID", "test_user")
-        monkeypatch.setenv("NEXACRO_USER_PASS", "test_pass")
-        monkeypatch.setenv("NEXACRO_EMAIL", "test@example.com")
-
-        with pytest.raises(ValueError, match="NEXACRO_CUSTOMER_ID"):
             Config.from_env()
 
     def test_from_env_missing_email(self, monkeypatch):
         """Test ValueError when NEXACRO_EMAIL is missing."""
         monkeypatch.setenv("NEXACRO_USER_ID", "test_user")
         monkeypatch.setenv("NEXACRO_USER_PASS", "test_pass")
-        monkeypatch.setenv("NEXACRO_CUSTOMER_ID", "test_customer")
 
         with pytest.raises(ValueError, match="NEXACRO_EMAIL"):
             Config.from_env()
@@ -73,7 +60,6 @@ class TestConfigFromEnv:
 
         error_message = str(exc_info.value)
         assert "NEXACRO_USER_PASS" in error_message
-        assert "NEXACRO_CUSTOMER_ID" in error_message
         assert "NEXACRO_EMAIL" in error_message
 
 
